@@ -1,0 +1,82 @@
+﻿@model IEnumerable<RestaurantApp.Models.Waiters>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Active waiters in this shift</h2>
+<div>
+    @if (User.IsInRole("Owner"))
+    {
+    <img src="https://www.escoffier.edu/wp-content/uploads/2022/04/Restaurant-manager-having-a-conversation-with-chef-with-laptop-on-table-768.jpeg" style="width:200px; height:150px; display:inline-block" />
+    }
+    @if (User.IsInRole("Waiter"))
+    {
+    <img src="https://media.istockphoto.com/id/661130682/photo/waiter-and-waitress-holding-a-serving-tray-with-glass-of-cocktail.jpg?s=612x612&w=0&k=20&c=0KbmzYTZ2an04--DjW8cQuYt0OvmZSvnp9JJbXP1cbQ=" style="width:200px; height:150px; display:inline-block" />
+    }
+</div>
+<br />
+
+<p>
+    @Html.ActionLink("Add New", "Create")
+</p>
+<table class="table" id="tablesId">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                Tables serving for the whole shift
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.countTables)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @if (User.IsInRole("Owner"))
+                    {
+                        @Html.ActionLink("Finish shift", "Delete", new { id = item.Id })
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#tablesId").DataTable();
+            $("#tablesId .js-delete").on("click", function () {
+               // alert("Raboti click");
+                var button = $(this);
+                bootbox.confirm("Close the bill?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/TablesAPI/" + button.attr("data-table-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }, error: function (err) {
+                                console.log(err);
+                            }
+                        });
+                    }
+                });
+
+            });
+        });
+    </script>
+}

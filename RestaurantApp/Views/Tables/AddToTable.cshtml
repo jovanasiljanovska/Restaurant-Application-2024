@@ -1,0 +1,18 @@
+﻿@model RestaurantApp.Models.AddItemToTable
+@{
+    ViewBag.Title = "AddToTable";
+}
+
+<h2>Order new thing: @ViewBag.StoreName </h2>
+
+@using (Html.BeginForm("AddToTable", "Tables"))
+{
+    <div class="form-group">
+        @Html.DropDownListFor(m => m.itemId, new SelectList(Model.items, "Id", "Name"), new { @class = "form-control" })
+    </div>
+    @Html.HiddenFor(m => m.tableId)
+    <button type="submit" class="btn btn-success">Add</button>
+
+}
+
+

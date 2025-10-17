@@ -1,0 +1,46 @@
+﻿@model RestaurantApp.Models.Waiters
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Waiters</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+           Number of tables served in the whole shift:
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.countTables)
+        </dd>
+
+        <dt>
+            Tables for serving:
+        </dt>
+
+        <dd>
+            @foreach(var table in Model.tables)
+            {
+                @Html.DisplayFor(t =>table.Name);
+                <br />
+            }
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
